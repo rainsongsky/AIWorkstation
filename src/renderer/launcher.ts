@@ -3,19 +3,18 @@
  * 处理启动器界面的所有交互
  */
 
-// 简单地使用类型断言来访问window.electronAPI
-// 避免复杂的类型声明问题
+import type { ElectronAPI } from '../preload';
 
 class LauncherApp {
-  private launchButton: HTMLButtonElement;
-  private startButton: HTMLButtonElement;
-  private startButtonText: HTMLSpanElement;
+  private readonly launchButton: HTMLButtonElement;
+  private readonly startButton: HTMLButtonElement;
+  private readonly startButtonText: HTMLSpanElement;
   private isLaunching: boolean = false;
 
   constructor() {
-    this.launchButton = document.getElementById('launch-btn') as HTMLButtonElement;
-    this.startButton = document.getElementById('start-button') as HTMLButtonElement;
-    this.startButtonText = document.getElementById('start-button-text') as HTMLSpanElement;
+    this.launchButton = document.querySelector('#launch-btn') as HTMLButtonElement;
+    this.startButton = document.querySelector('#start-button') as HTMLButtonElement;
+    this.startButtonText = document.querySelector('#start-button-text') as HTMLSpanElement;
 
     this.init();
   }
@@ -30,10 +29,10 @@ class LauncherApp {
     this.setupMenuButtons();
     this.loadVersionInfo();
 
-    // 通知主进程渲染器已就绪 - 使用类型断言
-    const electronAPI = (window as any).electronAPI;
-    if (electronAPI?.sendReady) {
-      electronAPI.sendReady();
+    // 通知主进程渲染器已就绪
+    const api = globalThis.electronAPI as ElectronAPI | undefined;
+    if (api?.sendReady) {
+      void api.sendReady();
     }
   }
 
@@ -41,22 +40,31 @@ class LauncherApp {
    * 设置标题栏控制按钮
    */
   private setupTitleBarControls(): void {
-    const minimizeBtn = document.getElementById('minimize-btn');
-    const maximizeBtn = document.getElementById('maximize-btn');
-    const closeBtn = document.getElementById('close-btn');
-    const electronAPI = (window as any).electronAPI;
+    const minimizeBtn = document.querySelector('#minimize-btn');
+    const maximizeBtn = document.querySelector('#maximize-btn');
+    const closeBtn = document.querySelector('#close-btn');
 
-    minimizeBtn?.addEventListener('click', async () => {
-      await electronAPI?.Launcher.windowControl('minimize');
+    minimizeBtn?.addEventListener('click', () => {
+      void this.handleWindowControl('minimize');
     });
 
-    maximizeBtn?.addEventListener('click', async () => {
-      await electronAPI?.Launcher.windowControl('maximize');
+    maximizeBtn?.addEventListener('click', () => {
+      void this.handleWindowControl('maximize');
     });
 
-    closeBtn?.addEventListener('click', async () => {
-      await electronAPI?.Launcher.windowControl('close');
+    closeBtn?.addEventListener('click', () => {
+      void this.handleWindowControl('close');
     });
+  }
+
+  /**
+   * 处理窗口控制操作
+   */
+  private async handleWindowControl(action: 'minimize' | 'maximize' | 'close'): Promise<void> {
+    const api = globalThis.electronAPI as ElectronAPI | undefined;
+    if (api?.Launcher?.windowControl) {
+      await api.Launcher.windowControl(action);
+    }
   }
 
   /**
@@ -64,7 +72,7 @@ class LauncherApp {
    */
   private setupLaunchButton(): void {
     this.launchButton?.addEventListener('click', () => {
-      this.handleLaunch();
+      void this.handleLaunch();
     });
   }
 
@@ -73,20 +81,29 @@ class LauncherApp {
    */
   private setupFolderButtons(): void {
     const folderButtons = document.querySelectorAll<HTMLButtonElement>('.folder-card');
-    const electronAPI = (window as any).electronAPI;
 
-    folderButtons.forEach((button) => {
-      button.addEventListener('click', async () => {
-        const folderKey = button.getAttribute('data-folder');
-        if (folderKey && electronAPI?.Launcher.openFolder) {
-          try {
-            await electronAPI.Launcher.openFolder(folderKey);
-          } catch (error) {
-            console.error(`Failed to open folder: ${folderKey}`, error);
-          }
+    for (const button of folderButtons) {
+      button.addEventListener('click', () => {
+        const folderKey = button.dataset.folder;
+        if (folderKey) {
+          void this.handleOpenFolder(folderKey);
         }
       });
-    });
+    }
+  }
+
+  /**
+   * 处理打开文件夹操作
+   */
+  private async handleOpenFolder(folderKey: string): Promise<void> {
+    const api = globalThis.electronAPI as ElectronAPI | undefined;
+    if (api?.Launcher?.openFolder) {
+      try {
+        await api.Launcher.openFolder(folderKey);
+      } catch (error) {
+        console.error(`Failed to open folder: ${folderKey}`, error);
+      }
+    }
   }
 
   /**
@@ -95,19 +112,19 @@ class LauncherApp {
   private setupMenuButtons(): void {
     const menuButtons = document.querySelectorAll<HTMLButtonElement>('.menu-item');
 
-    menuButtons.forEach((button) => {
+    for (const button of menuButtons) {
       button.addEventListener('click', () => {
-        const action = button.getAttribute('data-action');
+        const action = button.dataset.action;
         this.handleMenuAction(action);
       });
-    });
+    }
   }
 
   /**
    * 处理菜单操作
    * @param action 菜单操作类型
    */
-  private handleMenuAction(action: string | null): void {
+  private handleMenuAction(action: string | undefined): void {
     if (!action) return;
 
     console.log(`Menu action: ${action}`);
@@ -145,11 +162,11 @@ class LauncherApp {
 
     this.isLaunching = true;
     this.setLaunchingState(true);
-    const electronAPI = (window as any).electronAPI;
 
     try {
-      if (electronAPI?.Launcher.startComfyUI) {
-        await electronAPI.Launcher.startComfyUI();
+      const api = globalThis.electronAPI as ElectronAPI | undefined;
+      if (api?.Launcher?.startComfyUI) {
+        await api.Launcher.startComfyUI();
         console.log('ComfyUI started successfully');
       } else {
         console.error('electronAPI.Launcher.startComfyUI is not available');
@@ -186,21 +203,21 @@ class LauncherApp {
    */
   private loadVersionInfo(): void {
     try {
-      const electronAPI = (window as any).electronAPI;
+      const api = globalThis.electronAPI as ElectronAPI | undefined;
       
       // 获取 ComfyUI 版本
-      if (electronAPI?.getComfyUIVersion) {
-        const version = electronAPI.getComfyUIVersion();
-        const versionElement = document.getElementById('comfyui-version');
+      if (api?.getComfyUIVersion) {
+        const version = api.getComfyUIVersion();
+        const versionElement = document.querySelector('#comfyui-version');
         if (versionElement) {
           versionElement.textContent = version || '未知';
         }
       }
 
       // 获取平台信息
-      if (electronAPI?.getPlatform) {
-        const platform = electronAPI.getPlatform();
-        const platformElement = document.getElementById('activation-platform');
+      if (api?.getPlatform) {
+        const platform = api.getPlatform();
+        const platformElement = document.querySelector('#activation-platform');
         if (platformElement) {
           const platformMap: Record<string, string> = {
             darwin: 'macOS',
