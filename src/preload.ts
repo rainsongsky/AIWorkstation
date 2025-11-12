@@ -508,6 +508,30 @@ const electronAPI = {
     clickButton: (returnValue: string): Promise<boolean> =>
       ipcRenderer.invoke(IPC_CHANNELS.DIALOG_CLICK_BUTTON, returnValue),
   },
+
+  /**
+   * Launcher specific APIs
+   */
+  Launcher: {
+    /**
+     * Control window actions (minimize, maximize, close)
+     * @param action The window control action to perform
+     */
+    windowControl: (action: 'minimize' | 'maximize' | 'close'): Promise<void> =>
+      ipcRenderer.invoke(IPC_CHANNELS.LAUNCHER_WINDOW_CONTROL, action),
+
+    /**
+     * Open a folder in the system file explorer
+     * @param folderKey The folder key to open (root, custom_nodes, input, output)
+     */
+    openFolder: (folderKey: string): Promise<void> => ipcRenderer.invoke(IPC_CHANNELS.LAUNCHER_OPEN_FOLDER, folderKey),
+
+    /**
+     * Start ComfyUI server and return the URL
+     * @returns Object containing the ComfyUI server URL
+     */
+    startComfyUI: (): Promise<{ url: string } | void> => ipcRenderer.invoke(IPC_CHANNELS.LAUNCHER_START_COMFYUI),
+  },
 } as const;
 
 export type ElectronAPI = typeof electronAPI;

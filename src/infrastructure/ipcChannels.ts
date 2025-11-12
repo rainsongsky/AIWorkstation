@@ -107,6 +107,21 @@ type IpcChannelReturn<T extends keyof IpcChannels> = IpcChannels[T]['return'];
  * return: The return type (void for one-way send/on channels)
  */
 export interface IpcChannels {
+  [IPC_CHANNELS.LAUNCHER_WINDOW_CONTROL]: {
+    params: ['minimize' | 'maximize' | 'close'];
+    return: void;
+  };
+  
+  [IPC_CHANNELS.LAUNCHER_OPEN_FOLDER]: {
+    params: [string];
+    return: void;
+  };
+  
+  [IPC_CHANNELS.LAUNCHER_START_COMFYUI]: {
+    params: [];
+    return: void;
+  };
+  
   [IPC_CHANNELS.IS_PACKAGED]: {
     params: [];
     return: boolean;

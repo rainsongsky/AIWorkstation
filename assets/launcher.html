@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ComfyUI - 绘世启动器</title>
+  <script type="module" crossorigin src="/launcher.cjs"></script>
+  <link rel="modulepreload" crossorigin href="/_sentry-release-injection-file-CKfiH73b.cjs">
+  <link rel="stylesheet" crossorigin href="/comfyui-electron.css">
+</head>
+<body>
+  <!-- 自定义标题栏 -->
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-drag-region">
+      <span class="titlebar-title">绘世 2.8.13</span>
+    </div>
+    <div class="titlebar-controls">
+      <button class="titlebar-button" id="minimize-btn" aria-label="最小化">
+        <svg width="12" height="12" viewBox="0 0 12 12">
+          <rect x="0" y="5" width="12" height="2" fill="currentColor"/>
+        </svg>
+      </button>
+      <button class="titlebar-button" id="maximize-btn" aria-label="最大化">
+        <svg width="12" height="12" viewBox="0 0 12 12">
+          <rect x="0" y="0" width="12" height="12" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        </svg>
+      </button>
+      <button class="titlebar-button titlebar-close" id="close-btn" aria-label="关闭">
+        <svg width="12" height="12" viewBox="0 0 12 12">
+          <path d="M1 1 L11 11 M11 1 L1 11" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <div class="main-container">
+    <!-- 左侧边栏 -->
+    <div class="sidebar-left">
+      <!-- 启动按钮 -->
+      <button class="launch-button" id="launch-btn" title="一键启动">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+
+      <!-- 菜单项 -->
+      <div class="menu-items">
+        <button class="menu-item" data-action="advanced" title="高级选项">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M9 3v18M15 3v18"/>
+          </svg>
+        </button>
+        <button class="menu-item" data-action="troubleshoot" title="疑难解答">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+        </button>
+        <button class="menu-item" data-action="version" title="版本管理">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 底部菜单 -->
+      <div class="sidebar-bottom">
+        <button class="menu-item" data-action="community" title="交流群">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </button>
+        <button class="menu-item" data-action="settings" title="设置">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v6m0 6v6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 中间内容区域 -->
+    <div class="content-main">
+      <!-- Banner 区域 -->
+      <div class="banner">
+        <div class="banner-content">
+          <h1 class="banner-title">ComfyUI</h1>
+          <h2 class="banner-subtitle">绘世 - 启动器</h2>
+          <p class="banner-description">让 AI 与你一同创作，让画笔随心所欲！</p>
+        </div>
+        <div class="banner-credit">Created by hanamizuki.ai</div>
+      </div>
+
+      <!-- 文件夹区域 -->
+      <div class="folders-section">
+        <h3 class="section-title">文件夹</h3>
+        <div class="folders-grid">
+          <button class="folder-card" data-folder="root">
+            <div class="folder-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <div class="folder-info">
+              <div class="folder-name">根目录</div>
+            </div>
+            <div class="folder-arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
+
+          <button class="folder-card" data-folder="custom_nodes">
+            <div class="folder-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"/>
+                <circle cx="12" cy="5" r="2"/>
+                <circle cx="12" cy="19" r="2"/>
+                <circle cx="5" cy="12" r="2"/>
+                <circle cx="19" cy="12" r="2"/>
+              </svg>
+            </div>
+            <div class="folder-info">
+              <div class="folder-name">自定义节点</div>
+              <div class="folder-path">custom_nodes</div>
+            </div>
+            <div class="folder-arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
+
+          <button class="folder-card" data-folder="input">
+            <div class="folder-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+            <div class="folder-info">
+              <div class="folder-name">输入图片</div>
+              <div class="folder-path">input</div>
+            </div>
+            <div class="folder-arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
+
+          <button class="folder-card" data-folder="output">
+            <div class="folder-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+            </div>
+            <div class="folder-info">
+              <div class="folder-name">输出图片</div>
+              <div class="folder-path">output</div>
+            </div>
+            <div class="folder-arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧边栏 - 公告 -->
+    <div class="sidebar-right">
+      <h3 class="sidebar-title">公告</h3>
+      <div class="announcements">
+        <div class="announcement-item">
+          <p>公告已可通知，请戳喇叭查看全部内容。</p>
+        </div>
+        <div class="announcement-item">
+          <p>GitCode 国内镜像近期数据库无法访问，请自行更换其他网络通道。</p>
+        </div>
+        <div class="announcement-item">
+          <p>上交 PyTorch 镜像存在故障，请自行解决网络问题。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部状态栏 -->
+  <div class="statusbar">
+    <div class="statusbar-left">
+      <div class="status-item">
+        <span class="status-label">启动器版本:</span>
+        <span class="status-value" id="launcher-version">2.8.13 Build 414</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">配置文件版本:</span>
+        <span class="status-value" id="config-version">2025-04-30 01:29</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">ComfyUI 版本:</span>
+        <span class="status-value" id="comfyui-version">加载中...</span>
+      </div>
+    </div>
+    <div class="statusbar-right">
+      <div class="activation-badge">
+        <span>激活</span>
+        <span class="activation-platform" id="activation-platform">Windows</span>
+      </div>
+      <button class="start-button" id="start-button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M10 8l6 4-6 4z"/>
+        </svg>
+        <span id="start-button-text">运行中</span>
+      </button>
+    </div>
+  </div>
+
+</body>
+</html>

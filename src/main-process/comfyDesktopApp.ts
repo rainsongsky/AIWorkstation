@@ -97,9 +97,9 @@ export class ComfyDesktopApp implements HasTelemetry {
     return true;
   }
 
-  async startComfyServer(serverArgs: ServerArgs) {
+  async startComfyServer(serverArgs: ServerArgs, skipPageLoad = false) {
     log.info('Server start');
-    if (!this.appWindow.isOnPage('server-start')) {
+    if (!skipPageLoad && !this.appWindow.isOnPage('server-start')) {
       await this.appWindow.loadPage('server-start');
     }
 

@@ -55,6 +55,10 @@ export const IPC_CHANNELS = {
   GET_INSTALL_STAGE: 'get-install-stage',
   INSTALL_STAGE_UPDATE: 'install-stage-update',
   DIALOG_CLICK_BUTTON: 'dialog-click-button',
+  // Launcher specific channels
+  LAUNCHER_WINDOW_CONTROL: 'launcher-window-control',
+  LAUNCHER_OPEN_FOLDER: 'launcher-open-folder',
+  LAUNCHER_START_COMFYUI: 'launcher-start-comfyui',
 } as const;
 
 export enum ProgressStatus {
