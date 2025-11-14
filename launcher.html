@@ -249,6 +249,32 @@
         align-items: center;
         padding: 12px 0;
         flex-shrink: 0;
+        transition: width 0.3s ease;
+        overflow: hidden;
+      }
+
+      .sidebar-left.expanded {
+        width: 180px;
+      }
+
+      .sidebar-toggle {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 12px;
+        transition: background-color 0.2s;
+      }
+
+      .sidebar-toggle:hover {
+        background-color: var(--bg-hover);
+        color: var(--text-primary);
       }
 
       .launch-button {
@@ -262,11 +288,20 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 8px;
         margin-bottom: 16px;
         transition:
           transform 0.2s,
-          box-shadow 0.2s;
+          box-shadow 0.2s,
+          width 0.3s;
         box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .sidebar-left.expanded .launch-button {
+        width: 140px;
+        padding: 0 16px;
       }
 
       .launch-button:hover {
@@ -292,11 +327,28 @@
         }
       }
 
+      .menu-label {
+        opacity: 0;
+        max-width: 0;
+        overflow: hidden;
+        transition:
+          opacity 0.3s,
+          max-width 0.3s;
+        font-size: 14px;
+      }
+
+      .sidebar-left.expanded .menu-label {
+        opacity: 1;
+        max-width: 100px;
+      }
+
       .menu-items {
         display: flex;
         flex-direction: column;
         gap: 8px;
         margin-bottom: auto;
+        width: 100%;
+        padding: 0 10px;
       }
 
       .menu-item {
@@ -310,9 +362,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        gap: 8px;
         transition:
           background-color 0.2s,
-          color 0.2s;
+          color 0.2s,
+          width 0.3s;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+
+      .sidebar-left.expanded .menu-item {
+        width: 140px;
+        justify-content: flex-start;
+        padding: 0 12px;
       }
 
       .menu-item:hover {
@@ -320,11 +382,18 @@
         color: var(--text-primary);
       }
 
+      .menu-item.active {
+        background-color: rgba(102, 126, 234, 0.15);
+        color: var(--accent-primary);
+      }
+
       .sidebar-bottom {
         display: flex;
         flex-direction: column;
         gap: 8px;
         margin-top: 12px;
+        width: 100%;
+        padding: 0 10px;
       }
 
       .content-main {
@@ -446,6 +515,50 @@
         font-size: 14px;
         color: rgba(255, 255, 255, 0.9);
         text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        margin-bottom: 16px;
+      }
+
+      .hero-launch-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 32px;
+        background: white;
+        border: none;
+        border-radius: 24px;
+        color: #667eea;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.3s;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+
+      .hero-launch-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-launch-button:active {
+        transform: translateY(0);
+      }
+
+      .hero-launch-button.loading {
+        opacity: 0.7;
+        pointer-events: none;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
       }
 
       .banner-credit {
@@ -738,52 +851,57 @@
         <!-- 主要内容区域 -->
         <div class="main-container">
           <!-- 左侧边栏 -->
-          <div class="sidebar-left">
+          <div class="sidebar-left" id="sidebar-left">
+            <!-- 展开/收起按钮 -->
+            <button class="sidebar-toggle" id="sidebar-toggle" title="展开/收起">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            </button>
+
             <!-- 启动按钮 -->
             <button class="launch-button" id="launch-btn" title="一键启动">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>
+              <span class="menu-label">启动</span>
             </button>
 
             <!-- 菜单项 -->
             <div class="menu-items">
-              <button class="menu-item" data-action="advanced" title="高级选项">
+              <button class="menu-item active" data-action="home" title="首页">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span class="menu-label">首页</span>
+              </button>
+              <button class="menu-item" data-folder="root" title="模板">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="3" width="18" height="18" rx="2" />
                   <path d="M9 3v18M15 3v18" />
                 </svg>
+                <span class="menu-label">模板</span>
               </button>
-              <button class="menu-item" data-action="troubleshoot" title="疑难解答">
+              <button class="menu-item" data-folder="custom_nodes" title="我的空间">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path
-                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
-                  />
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
-              </button>
-              <button class="menu-item" data-action="version" title="版本管理">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
-                </svg>
+                <span class="menu-label">我的空间</span>
               </button>
             </div>
 
             <!-- 底部菜单 -->
             <div class="sidebar-bottom">
-              <button class="menu-item" data-action="community" title="交流群">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-              </button>
               <button class="menu-item" data-action="settings" title="设置">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="3" />
                   <path d="M12 1v6m0 6v6" />
                 </svg>
+                <span class="menu-label">设置</span>
               </button>
             </div>
           </div>
@@ -796,6 +914,12 @@
                 <h1 class="banner-title">元极AI工作站</h1>
                 <h2 class="banner-subtitle">让商业级视觉创作触手可及</h2>
                 <p class="banner-description">从工具到方法，一站式AI商业视觉创作</p>
+                <button class="hero-launch-button" id="hero-launch-btn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                  <span>开始创作</span>
+                </button>
               </div>
               <div class="banner-credit">Created by yuanjilab.com</div>
             </div>

@@ -30,7 +30,7 @@ class LauncherApp {
     this.loadVersionInfo();
 
     // 通知主进程渲染器已就绪
-    const api = window.electronAPI as ElectronAPI | undefined;
+    const api = globalThis.electronAPI;
     if (api?.sendReady) {
       void api.sendReady();
     }
@@ -61,7 +61,7 @@ class LauncherApp {
    * 处理窗口控制操作
    */
   private async handleWindowControl(action: 'minimize' | 'maximize' | 'close'): Promise<void> {
-    const api = window.electronAPI as ElectronAPI | undefined;
+    const api = globalThis.electronAPI;
     if (api?.Launcher?.windowControl) {
       await api.Launcher.windowControl(action);
     }
@@ -96,7 +96,7 @@ class LauncherApp {
    * 处理打开文件夹操作
    */
   private async handleOpenFolder(folderKey: string): Promise<void> {
-    const api = window.electronAPI as ElectronAPI | undefined;
+    const api = globalThis.electronAPI;
     if (api?.Launcher?.openFolder) {
       try {
         await api.Launcher.openFolder(folderKey);
@@ -164,7 +164,7 @@ class LauncherApp {
     this.setLaunchingState(true);
 
     try {
-      const api = window.electronAPI as ElectronAPI | undefined;
+      const api = globalThis.electronAPI;
       if (api?.Launcher?.startComfyUI) {
         await api.Launcher.startComfyUI();
         console.log('ComfyUI started successfully');
@@ -203,7 +203,7 @@ class LauncherApp {
    */
   private loadVersionInfo(): void {
     try {
-      const api = window.electronAPI as ElectronAPI | undefined;
+      const api = globalThis.electronAPI;
       
       // 获取 ComfyUI 版本
       if (api?.getComfyUIVersion) {
