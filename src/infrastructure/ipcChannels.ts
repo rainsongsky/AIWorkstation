@@ -111,17 +111,17 @@ export interface IpcChannels {
     params: ['minimize' | 'maximize' | 'close'];
     return: void;
   };
-  
+
   [IPC_CHANNELS.LAUNCHER_OPEN_FOLDER]: {
     params: [string];
     return: void;
   };
-  
+
   [IPC_CHANNELS.LAUNCHER_START_COMFYUI]: {
     params: [];
     return: void;
   };
-  
+
   [IPC_CHANNELS.IS_PACKAGED]: {
     params: [];
     return: boolean;

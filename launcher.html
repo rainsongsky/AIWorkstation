@@ -212,6 +212,35 @@
         color: var(--text-primary);
       }
 
+      .tab-announcement-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        background-color: transparent;
+        border: none;
+        border-radius: 8px 8px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-secondary);
+        margin-left: auto;
+        transition:
+          background-color 0.2s,
+          color 0.2s;
+        position: relative;
+      }
+
+      .tab-announcement-btn:hover {
+        background-color: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      .tab-announcement-btn.active {
+        color: var(--accent-primary);
+        background-color: rgba(102, 126, 234, 0.1);
+      }
+
       /* Tab 内容容器 */
       .tab-content-container {
         flex: 1;
@@ -270,11 +299,30 @@
         justify-content: center;
         margin-bottom: 12px;
         transition: background-color 0.2s;
+        position: relative;
       }
 
       .sidebar-toggle:hover {
         background-color: var(--bg-hover);
         color: var(--text-primary);
+      }
+
+      /* 默认状态（收起）：显示右箭头 */
+      .sidebar-toggle-icon-collapsed {
+        display: block;
+      }
+
+      .sidebar-toggle-icon-expanded {
+        display: none;
+      }
+
+      /* 展开状态：显示左箭头 */
+      .sidebar-left.expanded .sidebar-toggle-icon-collapsed {
+        display: none;
+      }
+
+      .sidebar-left.expanded .sidebar-toggle-icon-expanded {
+        display: block;
       }
 
       .launch-button {
@@ -459,73 +507,92 @@
       }
 
       .banner {
-        height: 200px;
+        min-height: 185px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 32px;
+        align-items: center;
+        padding: 48px 32px;
         overflow: hidden;
+        text-align: center;
       }
 
       .banner::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image:
-          linear-gradient(45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
-          linear-gradient(-45deg, rgba(255, 255, 255, 0.05) 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.05) 75%),
-          linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.05) 75%);
-        background-size: 40px 40px;
-        background-position:
-          0 0,
-          0 20px,
-          20px -20px,
-          -20px 0px;
-        opacity: 0.3;
+        top: -300px;
+        left: -200px;
+        width: 800px;
+        height: 800px;
+        background: radial-gradient(
+          circle,
+          rgba(159, 168, 255, 0.4) 0%,
+          rgba(159, 168, 255, 0.2) 30%,
+          rgba(159, 168, 255, 0.1) 50%,
+          rgba(159, 168, 255, 0) 70%
+        );
+        border-radius: 50%;
+      }
+
+      .banner::after {
+        content: '';
+        position: absolute;
+        bottom: -350px;
+        left: 100px;
+        width: 900px;
+        height: 900px;
+        background: radial-gradient(
+          circle,
+          rgba(159, 168, 255, 0.3) 0%,
+          rgba(159, 168, 255, 0.15) 30%,
+          rgba(159, 168, 255, 0.08) 50%,
+          rgba(159, 168, 255, 0) 70%
+        );
+        border-radius: 50%;
       }
 
       .banner-content {
         position: relative;
         z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 900px;
       }
 
       .banner-title {
-        font-size: 32px;
+        font-size: 40px;
         font-weight: 700;
         color: white;
-        margin-bottom: 4px;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        margin-bottom: 10px;
+        text-shadow: 0 3px 16px rgba(0, 0, 0, 0.3);
+        letter-spacing: 2px;
       }
 
       .banner-subtitle {
-        font-size: 24px;
-        font-weight: 600;
+        font-size: 15px;
+        font-weight: 400;
         color: rgba(255, 255, 255, 0.95);
-        margin-bottom: 8px;
-        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        margin-bottom: 16px;
+        line-height: 1.7;
+        max-width: 700px;
       }
 
       .banner-description {
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.9);
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-        margin-bottom: 16px;
+        display: none;
       }
 
       .hero-launch-button {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 12px 32px;
+        padding: 13px 36px;
         background: white;
         border: none;
-        border-radius: 24px;
+        border-radius: 26px;
         color: #667eea;
         font-size: 15px;
         font-weight: 600;
@@ -533,12 +600,12 @@
         transition:
           transform 0.2s,
           box-shadow 0.3s;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
       }
 
       .hero-launch-button:hover {
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
       }
 
       .hero-launch-button:active {
@@ -563,10 +630,10 @@
 
       .banner-credit {
         position: absolute;
-        bottom: 12px;
-        right: 16px;
-        font-size: 11px;
-        color: rgba(255, 255, 255, 0.7);
+        bottom: 6px;
+        right: 12px;
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.6);
         z-index: 1;
       }
 
@@ -645,12 +712,40 @@
       }
 
       .sidebar-right {
-        width: var(--sidebar-right-width);
+        position: fixed;
+        top: 0;
+        right: -320px;
+        width: 320px;
+        height: 100vh;
         background-color: var(--bg-secondary);
         border-left: 1px solid var(--border-color);
         display: flex;
         flex-direction: column;
-        flex-shrink: 0;
+        z-index: 1000;
+        transition: right 0.3s ease;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .sidebar-right.show {
+        right: 0;
+      }
+
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+        opacity: 1;
       }
 
       .sidebar-title {
@@ -659,6 +754,34 @@
         color: var(--text-primary);
         padding: 16px;
         border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        white-space: nowrap;
+      }
+
+      .sidebar-title-text {
+        flex: 1;
+      }
+
+      .sidebar-close-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 6px;
+        background: transparent;
+        border: none;
+        color: var(--text-secondary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: background-color 0.2s;
+      }
+
+      .sidebar-close-btn:hover {
+        background-color: var(--bg-hover);
+        color: var(--text-primary);
       }
 
       .announcements {
@@ -778,6 +901,217 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #444444;
       }
+
+      /* Feature icons row */
+      .feature-icons-section {
+        padding: 28px 32px 24px 48px;
+        background-color: #0f0f0f;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .feature-icons-grid {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(90px, 120px));
+        gap: 12px;
+        justify-content: start;
+      }
+
+      .feature-icon-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 8px;
+        background-color: transparent;
+        border: 1px solid transparent;
+        border-radius: 6px;
+        cursor: pointer;
+        transition:
+          background-color 0.2s,
+          border-color 0.2s,
+          transform 0.15s;
+      }
+
+      .feature-icon-item:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+        border-color: rgba(74, 158, 255, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .feature-icon-wrapper {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(45, 55, 75, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6eb6ff;
+        transition: all 0.2s;
+      }
+
+      .feature-icon-item:hover .feature-icon-wrapper {
+        background: rgba(55, 70, 95, 0.65);
+        transform: scale(1.08);
+      }
+
+      .feature-icon-label {
+        font-size: 12px;
+        color: #c0c0c0;
+        text-align: center;
+        font-weight: 400;
+      }
+
+      /* Professional features section */
+      .professional-section {
+        padding: 24px 32px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .section-more {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 13px;
+        color: var(--text-tertiary);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .section-more:hover {
+        color: var(--text-primary);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
+      .feature-card {
+        position: relative;
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        transition:
+          background-color 0.2s,
+          border-color 0.2s,
+          transform 0.1s,
+          box-shadow 0.2s;
+      }
+
+      .feature-card:hover {
+        background-color: var(--bg-tertiary);
+        border-color: var(--accent-primary);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .feature-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+
+      .feature-badge.hot {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        color: white;
+      }
+
+      .feature-badge.new {
+        background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        color: white;
+      }
+
+      .feature-card-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-primary);
+      }
+
+      .feature-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-primary);
+      }
+
+      .feature-card-description {
+        font-size: 12px;
+        color: var(--text-tertiary);
+        text-align: center;
+      }
+
+      /* Local resources section */
+      .local-resources-section {
+        padding: 24px 32px;
+      }
+
+      .resources-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+      }
+
+      .resource-card {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 32px 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        transition:
+          background-color 0.2s,
+          border-color 0.2s,
+          transform 0.1s;
+      }
+
+      .resource-card:hover {
+        background-color: var(--bg-tertiary);
+        border-color: var(--accent-primary);
+        transform: translateY(-2px);
+      }
+
+      .resource-card-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.15));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--accent-primary);
+      }
+
+      .resource-card-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -842,6 +1176,12 @@
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
       </button>
+      <button class="tab-announcement-btn" id="announcement-toggle-btn" title="公告">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+      </button>
     </div>
 
     <!-- Tab 内容容器 -->
@@ -853,11 +1193,30 @@
           <!-- 左侧边栏 -->
           <div class="sidebar-left" id="sidebar-left">
             <!-- 展开/收起按钮 -->
-            <button class="sidebar-toggle" id="sidebar-toggle" title="展开/收起">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="18" x2="21" y2="18" />
+            <button class="sidebar-toggle" id="sidebar-toggle" title="展开">
+              <!-- 收起状态图标：右箭头 -->
+              <svg
+                class="sidebar-toggle-icon-collapsed"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+              <!-- 展开状态图标：左箭头 -->
+              <svg
+                class="sidebar-toggle-icon-expanded"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="15 18 9 12 15 6" />
               </svg>
             </button>
 
@@ -866,7 +1225,7 @@
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
               </svg>
-              <span class="menu-label">启动</span>
+              <span class="menu-label">一键启动</span>
             </button>
 
             <!-- 菜单项 -->
@@ -912,8 +1271,7 @@
             <div class="banner">
               <div class="banner-content">
                 <h1 class="banner-title">元极AI工作站</h1>
-                <h2 class="banner-subtitle">让商业级视觉创作触手可及</h2>
-                <p class="banner-description">从工具到方法，一站式AI商业视觉创作</p>
+                <h2 class="banner-subtitle">专业的 AI 视觉生成工作流平台 - 让商业级视觉创作触手可及</h2>
                 <button class="hero-launch-button" id="hero-launch-btn">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
@@ -924,29 +1282,24 @@
               <div class="banner-credit">Created by yuanjilab.com</div>
             </div>
 
-            <!-- 文件夹区域 -->
-            <div class="folders-section">
-              <h3 class="section-title">文件夹</h3>
-              <div class="folders-grid">
-                <button class="folder-card" data-folder="root">
-                  <div class="folder-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+            <!-- Feature Icons Section -->
+            <div class="feature-icons-section">
+              <div class="feature-icons-grid">
+                <button class="feature-icon-item" data-action="workflow">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="7" height="7" />
+                      <rect x="14" y="3" width="7" height="7" />
+                      <rect x="14" y="14" width="7" height="7" />
+                      <rect x="3" y="14" width="7" height="7" />
                     </svg>
                   </div>
-                  <div class="folder-info">
-                    <div class="folder-name">根目录</div>
-                  </div>
-                  <div class="folder-arrow">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                  </div>
+                  <span class="feature-icon-label">工作流编辑</span>
                 </button>
 
-                <button class="folder-card" data-folder="custom_nodes">
-                  <div class="folder-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="feature-icon-item" data-action="api">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="3" />
                       <circle cx="12" cy="5" r="2" />
                       <circle cx="12" cy="19" r="2" />
@@ -954,67 +1307,191 @@
                       <circle cx="19" cy="12" r="2" />
                     </svg>
                   </div>
-                  <div class="folder-info">
-                    <div class="folder-name">自定义节点</div>
-                    <div class="folder-path">custom_nodes</div>
-                  </div>
-                  <div class="folder-arrow">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                  </div>
+                  <span class="feature-icon-label">API 节点</span>
                 </button>
 
-                <button class="folder-card" data-folder="input">
-                  <div class="folder-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="feature-icon-item" data-action="models">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <span class="feature-icon-label">模型管理</span>
+                </button>
+
+                <button class="feature-icon-item" data-action="custom-nodes">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                      <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+                    </svg>
+                  </div>
+                  <span class="feature-icon-label">自定义节点</span>
+                </button>
+
+                <button class="feature-icon-item" data-folder="input">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                       <circle cx="8.5" cy="8.5" r="1.5" />
                       <polyline points="21 15 16 10 5 21" />
                     </svg>
                   </div>
-                  <div class="folder-info">
-                    <div class="folder-name">输入图片</div>
-                    <div class="folder-path">input</div>
-                  </div>
-                  <div class="folder-arrow">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                  </div>
+                  <span class="feature-icon-label">图片输入</span>
                 </button>
 
-                <button class="folder-card" data-folder="output">
-                  <div class="folder-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <button class="feature-icon-item" data-folder="output">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                       <polyline points="7 10 12 15 17 10" />
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
                   </div>
-                  <div class="folder-info">
-                    <div class="folder-name">输出图片</div>
-                    <div class="folder-path">output</div>
-                  </div>
-                  <div class="folder-arrow">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="9 18 15 12 9 6" />
+                  <span class="feature-icon-label">图片输出</span>
+                </button>
+
+                <button class="feature-icon-item" data-action="settings">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3" />
+                      <path
+                        d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"
+                      />
                     </svg>
                   </div>
+                  <span class="feature-icon-label">设置</span>
+                </button>
+
+                <button class="feature-icon-item" data-action="more">
+                  <div class="feature-icon-wrapper">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="1" />
+                      <circle cx="19" cy="12" r="1" />
+                      <circle cx="5" cy="12" r="1" />
+                    </svg>
+                  </div>
+                  <span class="feature-icon-label">更多</span>
                 </button>
               </div>
             </div>
-          </div>
 
-          <!-- 右侧边栏 - 公告 -->
-          <div class="sidebar-right">
-            <h3 class="sidebar-title">公告</h3>
-            <div class="announcements">
-              <div class="announcement-item">
-                <p>11/11 工作流上新，道新增“多图融合”、“万物替换”、“去AI感”、“高清放大”。</p>
+            <!-- Professional Features Section -->
+            <div class="professional-section">
+              <div class="section-header">
+                <h3 class="section-title">专业功能</h3>
+                <div class="section-more">
+                  <span>查看更多</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
               </div>
-              <div class="announcement-item">
-                <p>11/10 元极AI工作站0.1.0正式发布，欢迎试用！</p>
+              <div class="features-grid">
+                <button class="feature-card" data-feature="image-gen">
+                  <div class="feature-badge hot">热门</div>
+                  <div class="feature-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                  </div>
+                  <div class="feature-card-title">AI 图片生成</div>
+                  <div class="feature-card-description">文生图、图生图多种模式</div>
+                </button>
+
+                <button class="feature-card" data-feature="video-gen">
+                  <div class="feature-badge new">新功能</div>
+                  <div class="feature-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="23 7 16 12 23 17 23 7" />
+                      <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+                    </svg>
+                  </div>
+                  <div class="feature-card-title">视频生成</div>
+                  <div class="feature-card-description">AI 驱动的视频创作</div>
+                </button>
+
+                <button class="feature-card" data-feature="image-enhance">
+                  <div class="feature-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6" />
+                    </svg>
+                  </div>
+                  <div class="feature-card-title">图片增强</div>
+                  <div class="feature-card-description">超清画质、智能修复</div>
+                </button>
+
+                <button class="feature-card" data-feature="batch-process">
+                  <div class="feature-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                      <polyline points="13 2 13 9 20 9" />
+                    </svg>
+                  </div>
+                  <div class="feature-card-title">批量处理</div>
+                  <div class="feature-card-description">高效处理大量图片</div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Local Resources Section -->
+            <div class="local-resources-section">
+              <div class="section-header">
+                <h3 class="section-title">本地资源</h3>
+                <div class="section-more">
+                  <span>查看全部</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+              <div class="resources-grid">
+                <button class="resource-card" data-folder="custom_nodes">
+                  <div class="resource-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3" />
+                      <circle cx="12" cy="5" r="2" />
+                      <circle cx="12" cy="19" r="2" />
+                      <circle cx="5" cy="12" r="2" />
+                      <circle cx="19" cy="12" r="2" />
+                    </svg>
+                  </div>
+                  <span class="resource-card-label">自定义节点</span>
+                </button>
+
+                <button class="resource-card" data-folder="root">
+                  <div class="resource-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                  </div>
+                  <span class="resource-card-label">工作流</span>
+                </button>
+
+                <button class="resource-card" data-folder="input">
+                  <div class="resource-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                  </div>
+                  <span class="resource-card-label">图片素材</span>
+                </button>
+
+                <button class="resource-card" data-action="models">
+                  <div class="resource-card-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                      />
+                    </svg>
+                  </div>
+                  <span class="resource-card-label">模型库</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1055,6 +1532,30 @@
       </div>
     </div>
 
+    <!-- 公告侧边栏遮罩 -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- 公告侧边栏 -->
+    <div class="sidebar-right" id="sidebar-right">
+      <div class="sidebar-title">
+        <span class="sidebar-title-text">公告</span>
+        <button class="sidebar-close-btn" id="sidebar-close-btn" title="关闭">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="announcements">
+        <div class="announcement-item">
+          <p>11/11 工作流上新，道新增"多图融合"、"万物替换"、"去AI感"、"高清放大"。</p>
+        </div>
+        <div class="announcement-item">
+          <p>11/10 元极AI工作站0.1.0正式发布，欢迎试用！</p>
+        </div>
+      </div>
+    </div>
+
     <script>
       // 启动器渲染进程逻辑 - 内嵌版本
       class LauncherApp {
@@ -1071,9 +1572,14 @@
         init() {
           this.setupTabs();
           this.setupTitleBarControls();
+          this.setupLeftSidebar();
           this.setupLaunchButton();
           this.setupFolderButtons();
           this.setupMenuButtons();
+          this.setupFeatureIcons();
+          this.setupFeatureCards();
+          this.setupResourceCards();
+          this.setupAnnouncement();
           this.loadVersionInfo();
 
           // 通知主进程渲染器已就绪
@@ -1298,6 +1804,17 @@
           }
         }
 
+        setupLeftSidebar() {
+          const sidebarLeft = document.getElementById('sidebar-left');
+          const sidebarToggle = document.getElementById('sidebar-toggle');
+
+          if (sidebarToggle && sidebarLeft) {
+            sidebarToggle.addEventListener('click', () => {
+              sidebarLeft.classList.toggle('expanded');
+            });
+          }
+        }
+
         setupLaunchButton() {
           // 左侧边栏的启动按钮
           if (this.launchButton) {
@@ -1309,6 +1826,14 @@
           // 右下角状态栏的启动按钮
           if (this.startButton) {
             this.startButton.addEventListener('click', () => {
+              this.handleLaunch();
+            });
+          }
+
+          // Banner区域的"开始创作"按钮
+          const heroLaunchBtn = document.getElementById('hero-launch-btn');
+          if (heroLaunchBtn) {
+            heroLaunchBtn.addEventListener('click', () => {
               this.handleLaunch();
             });
           }
@@ -1332,6 +1857,63 @@
           });
         }
 
+        setupFeatureIcons() {
+          const featureIcons = document.querySelectorAll('.feature-icon-item');
+          const electronAPI = window.electronAPI;
+
+          featureIcons.forEach((icon) => {
+            icon.addEventListener('click', async () => {
+              const action = icon.getAttribute('data-action');
+              const folderKey = icon.getAttribute('data-folder');
+
+              if (folderKey && electronAPI && electronAPI.Launcher && electronAPI.Launcher.openFolder) {
+                try {
+                  await electronAPI.Launcher.openFolder(folderKey);
+                } catch (error) {
+                  console.error(`Failed to open folder: ${folderKey}`, error);
+                }
+              } else if (action) {
+                this.handleMenuAction(action);
+              }
+            });
+          });
+        }
+
+        setupFeatureCards() {
+          const featureCards = document.querySelectorAll('.feature-card');
+
+          featureCards.forEach((card) => {
+            card.addEventListener('click', () => {
+              const feature = card.getAttribute('data-feature');
+              console.log(`Feature card clicked: ${feature}`);
+              // 这里可以添加具体的功能实现
+              // 例如：打开特定的工作流模板，或导航到功能页面
+            });
+          });
+        }
+
+        setupResourceCards() {
+          const resourceCards = document.querySelectorAll('.resource-card');
+          const electronAPI = window.electronAPI;
+
+          resourceCards.forEach((card) => {
+            card.addEventListener('click', async () => {
+              const folderKey = card.getAttribute('data-folder');
+              const action = card.getAttribute('data-action');
+
+              if (folderKey && electronAPI && electronAPI.Launcher && electronAPI.Launcher.openFolder) {
+                try {
+                  await electronAPI.Launcher.openFolder(folderKey);
+                } catch (error) {
+                  console.error(`Failed to open folder: ${folderKey}`, error);
+                }
+              } else if (action) {
+                this.handleMenuAction(action);
+              }
+            });
+          });
+        }
+
         setupMenuButtons() {
           const menuButtons = document.querySelectorAll('.menu-item');
 
@@ -1341,6 +1923,56 @@
               this.handleMenuAction(action);
             });
           });
+        }
+
+        setupAnnouncement() {
+          const sidebarRight = document.getElementById('sidebar-right');
+          const sidebarOverlay = document.getElementById('sidebar-overlay');
+          const announcementToggleBtn = document.getElementById('announcement-toggle-btn');
+          const sidebarCloseBtn = document.getElementById('sidebar-close-btn');
+
+          // 显示公告侧边栏
+          const showAnnouncement = () => {
+            if (sidebarRight && sidebarOverlay) {
+              sidebarRight.classList.add('show');
+              sidebarOverlay.classList.add('show');
+              if (announcementToggleBtn) {
+                announcementToggleBtn.classList.add('active');
+              }
+            }
+          };
+
+          // 隐藏公告侧边栏
+          const hideAnnouncement = () => {
+            if (sidebarRight && sidebarOverlay) {
+              sidebarRight.classList.remove('show');
+              sidebarOverlay.classList.remove('show');
+              if (announcementToggleBtn) {
+                announcementToggleBtn.classList.remove('active');
+              }
+            }
+          };
+
+          // Tab栏的公告按钮
+          if (announcementToggleBtn) {
+            announcementToggleBtn.addEventListener('click', () => {
+              if (sidebarRight && sidebarRight.classList.contains('show')) {
+                hideAnnouncement();
+              } else {
+                showAnnouncement();
+              }
+            });
+          }
+
+          // 关闭按钮
+          if (sidebarCloseBtn) {
+            sidebarCloseBtn.addEventListener('click', hideAnnouncement);
+          }
+
+          // 点击遮罩关闭
+          if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', hideAnnouncement);
+          }
         }
 
         handleMenuAction(action) {

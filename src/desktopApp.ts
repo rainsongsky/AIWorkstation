@@ -138,7 +138,10 @@ export class DesktopApp implements HasTelemetry {
       // Short circuit if server is already running - return the existing server's URL
       if (comfyDesktopApp.serverRunning && comfyDesktopApp.comfyServer) {
         log.info('ComfyUI server is already running, returning existing URL');
-        const host = comfyDesktopApp.comfyServer.serverArgs.listen === '0.0.0.0' ? 'localhost' : comfyDesktopApp.comfyServer.serverArgs.listen;
+        const host =
+          comfyDesktopApp.comfyServer.serverArgs.listen === '0.0.0.0'
+            ? 'localhost'
+            : comfyDesktopApp.comfyServer.serverArgs.listen;
         const url = overrides.DEV_FRONTEND_URL ?? `http://${host}:${comfyDesktopApp.comfyServer.serverArgs.port}`;
         appWindow.sendServerStartProgress(ProgressStatus.READY);
         appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
@@ -242,8 +245,6 @@ export class DesktopApp implements HasTelemetry {
       // Skip page load when launching from launcher - keep the launcher window visible
       await comfyDesktopApp.startComfyServer(serverArgs, true);
     }
-
-
 
     /**
      * Shows the startup error page and sets the app state to error.

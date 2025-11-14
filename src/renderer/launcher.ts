@@ -3,8 +3,6 @@
  * 处理启动器界面的所有交互
  */
 
-import type { ElectronAPI } from '../preload';
-
 class LauncherApp {
   private readonly launchButton: HTMLButtonElement;
   private readonly startButton: HTMLButtonElement;
@@ -204,7 +202,7 @@ class LauncherApp {
   private loadVersionInfo(): void {
     try {
       const api = globalThis.electronAPI;
-      
+
       // 获取 ComfyUI 版本
       if (api?.getComfyUIVersion) {
         const version = api.getComfyUIVersion();
