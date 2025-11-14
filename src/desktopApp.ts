@@ -243,17 +243,7 @@ export class DesktopApp implements HasTelemetry {
       await comfyDesktopApp.startComfyServer(serverArgs, true);
     }
 
-    /**
-     * Loads the frontend and sets the app state to ready.
-     * @param serverArgs The server args to use to load the frontend.
-     */
-    async function loadFrontend(serverArgs: ServerArgs): Promise<void> {
-      appWindow.sendServerStartProgress(ProgressStatus.READY);
-      await appWindow.loadComfyUI(serverArgs);
 
-      appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
-      appState.emitLoaded();
-    }
 
     /**
      * Shows the startup error page and sets the app state to error.

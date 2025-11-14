@@ -24,7 +24,7 @@ export function registerLauncherHandlers(
   /**
    * Handle window control actions (minimize, maximize, close)
    */
-  ipcMain.handle(IPC_CHANNELS.LAUNCHER_WINDOW_CONTROL, async (_event, action: 'minimize' | 'maximize' | 'close') => {
+  ipcMain.handle(IPC_CHANNELS.LAUNCHER_WINDOW_CONTROL, (_event, action: 'minimize' | 'maximize' | 'close') => {
     const window = getWindow();
     if (!window) {
       log.error('Cannot control window: window is undefined');
