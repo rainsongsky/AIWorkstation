@@ -1112,6 +1112,86 @@
         color: var(--text-secondary);
         text-align: center;
       }
+      .section-inner {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .banner {
+        min-height: 240px;
+        background: radial-gradient(1000px 500px at 10% -10%, rgba(90, 162, 255, 0.15), transparent 60%),
+          radial-gradient(800px 400px at 90% 120%, rgba(118, 75, 162, 0.15), transparent 60%),
+          linear-gradient(180deg, #121212 0%, #171717 100%);
+        padding: 56px 32px;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .banner-title {
+        font-size: 36px;
+        margin-bottom: 12px;
+        letter-spacing: 0.5px;
+      }
+      .banner-subtitle {
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+        max-width: 720px;
+      }
+      .hero-launch-button {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #ffffff, #f5f8ff);
+        border: 1px solid rgba(90, 162, 255, 0.25);
+        border-radius: 28px;
+        color: #5aa2ff;
+        font-size: 14px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+      }
+      .feature-icons-section {
+        padding: 28px 32px;
+        background-color: #111111;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .feature-icons-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+      @media (max-width: 1200px) {
+        .features-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .resources-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+      @media (max-width: 992px) {
+        .features-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .resources-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .banner-title {
+          font-size: 30px;
+        }
+        .banner-subtitle {
+          font-size: 15px;
+        }
+      }
+      @media (max-width: 768px) {
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+        .resources-grid {
+          grid-template-columns: 1fr;
+        }
+        .feature-icons-section,
+        .professional-section,
+        .local-resources-section {
+          padding: 20px;
+        }
+        .banner {
+          padding: 40px 20px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -1271,7 +1351,7 @@
             <div class="banner">
               <div class="banner-content">
                 <h1 class="banner-title">元极AI工作站</h1>
-                <h2 class="banner-subtitle">专业的 AI 视觉生成工作流平台 - 让商业级视觉创作触手可及</h2>
+                <h2 class="banner-subtitle">专业的 AI 视频生成工作流平台 - 让商业级视觉创作触手可及</h2>
                 <button class="hero-launch-button" id="hero-launch-btn">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
@@ -1284,7 +1364,8 @@
 
             <!-- Feature Icons Section -->
             <div class="feature-icons-section">
-              <div class="feature-icons-grid">
+              <div class="section-inner">
+                <div class="feature-icons-grid">
                 <button class="feature-icon-item" data-action="workflow">
                   <div class="feature-icon-wrapper">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1373,21 +1454,23 @@
                   </div>
                   <span class="feature-icon-label">更多</span>
                 </button>
+                </div>
               </div>
             </div>
 
             <!-- Professional Features Section -->
             <div class="professional-section">
-              <div class="section-header">
-                <h3 class="section-title">专业功能</h3>
-                <div class="section-more">
-                  <span>查看更多</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
+              <div class="section-inner">
+                <div class="section-header">
+                  <h3 class="section-title">专业功能</h3>
+                  <div class="section-more">
+                    <span>查看更多</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-              <div class="features-grid">
+                <div class="features-grid">
                 <button class="feature-card" data-feature="image-gen">
                   <div class="feature-badge hot">热门</div>
                   <div class="feature-card-icon">
@@ -1434,21 +1517,23 @@
                   <div class="feature-card-title">批量处理</div>
                   <div class="feature-card-description">高效处理大量图片</div>
                 </button>
+                </div>
               </div>
             </div>
 
             <!-- Local Resources Section -->
             <div class="local-resources-section">
-              <div class="section-header">
-                <h3 class="section-title">本地资源</h3>
-                <div class="section-more">
-                  <span>查看全部</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <polyline points="9 18 15 12 9 6" />
-                  </svg>
+              <div class="section-inner">
+                <div class="section-header">
+                  <h3 class="section-title">本地资源</h3>
+                  <div class="section-more">
+                    <span>查看全部</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="9 18 15 12 9 6" />
+                    </svg>
+                  </div>
                 </div>
-              </div>
-              <div class="resources-grid">
+                <div class="resources-grid">
                 <button class="resource-card" data-folder="custom_nodes">
                   <div class="resource-card-icon">
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1492,6 +1577,7 @@
                   </div>
                   <span class="resource-card-label">模型库</span>
                 </button>
+                </div>
               </div>
             </div>
           </div>
