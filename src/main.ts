@@ -71,7 +71,9 @@ async function startApp() {
 
   const desktopApp = new DesktopApp(overrides, config);
   await desktopApp.showLoadingPage();
-  await desktopApp.start();
+  // Initialize installation but don't start ComfyUI yet
+  // The launcher will trigger the start when user clicks the launch button
+  await desktopApp.initializeForLauncher();
 }
 
 /**

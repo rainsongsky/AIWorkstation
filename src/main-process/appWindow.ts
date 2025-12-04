@@ -168,6 +168,33 @@ export class AppWindow {
     await this.window.loadURL(url);
   }
 
+  /**
+   * Loads the launcher page.
+   * The launcher provides a custom interface for starting ComfyUI.
+   */
+  public async loadLauncher(): Promise<void> {
+    log.info('Loading launcher page');
+
+    // Always load launcher from file system (even in development)
+    // because it's a standalone HTML file with inline styles and scripts
+    const launcherPath = app.isPackaged
+      ? path.join(app.getAppPath(), '.vite', 'build', 'launcher.html')
+      : path.join(process.cwd(), 'launcher.html');
+
+    log.info(`Loading launcher from: ${launcherPath}`);
+
+    this.rendererReady = true;
+    if (this.autoOpenDevTools) this.window.webContents.openDevTools();
+
+    try {
+      await this.window.loadFile(launcherPath);
+      log.info('Launcher loaded successfully');
+    } catch (error) {
+      log.error('Failed to load launcher:', error);
+      throw error;
+    }
+  }
+
   public openDevTools(): void {
     this.window.webContents.openDevTools();
   }

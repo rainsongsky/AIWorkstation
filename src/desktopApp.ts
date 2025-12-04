@@ -10,6 +10,7 @@ import { registerAppHandlers } from './handlers/AppHandlers';
 import { registerAppInfoHandlers } from './handlers/appInfoHandlers';
 import { registerGpuHandlers } from './handlers/gpuHandlers';
 import { registerInstallStateHandlers } from './handlers/installStateHandlers';
+import { registerLauncherHandlers } from './handlers/launcherHandlers';
 import { registerNetworkHandlers } from './handlers/networkHandlers';
 import { registerPathHandlers } from './handlers/pathHandlers';
 import { FatalError } from './infrastructure/fatalError';
@@ -47,15 +48,15 @@ export class DesktopApp implements HasTelemetry {
     );
   }
 
-  /** Load start screen - basic spinner */
+  /** Load launcher screen - custom UI for starting ComfyUI */
   async showLoadingPage() {
     try {
       this.appState.setInstallStage(createInstallStageInfo(InstallStage.APP_INITIALIZING, { progress: 1 }));
-      await this.appWindow.loadPage('desktop-start');
+      await this.appWindow.loadLauncher();
     } catch (error) {
       DesktopApp.fatalError({
         error,
-        message: `Unknown error whilst loading start screen.\n\n${error}`,
+        message: `Unknown error whilst loading launcher screen.\n\n${error}`,
         title: 'Startup failed',
       });
     }
@@ -91,8 +92,13 @@ export class DesktopApp implements HasTelemetry {
     }
   }
 
-  async start(): Promise<void> {
-    const { appState, appWindow, overrides, telemetry } = this;
+  /**
+   * Initialize the app for launcher mode
+   * This prepares the installation but doesn't start the ComfyUI server
+   * The server will be started when the user clicks the launch button
+   */
+  async initializeForLauncher(): Promise<void> {
+    const { appState } = this;
 
     if (!appState.ipcRegistered) this.registerIpcHandlers();
 
@@ -104,24 +110,69 @@ export class DesktopApp implements HasTelemetry {
     // At this point, user has gone through the onboarding flow.
     await this.initializeTelemetry(installation);
 
+    log.info('Launcher initialized and ready. Waiting for user to start ComfyUI...');
+  }
+
+  async start(): Promise<{ url: string } | void> {
+    const { appState, appWindow, overrides, telemetry } = this;
+
+    // If not yet registered, register IPC handlers
+    if (!appState.ipcRegistered) this.registerIpcHandlers();
+
+    // If installation is not yet complete, initialize it
+    if (!this.installation) {
+      appState.setInstallStage(createInstallStageInfo(InstallStage.CHECKING_EXISTING_INSTALL, { progress: 2 }));
+      const installation = await this.initializeInstallation();
+      if (!installation) return;
+      this.installation = installation;
+
+      // At this point, user has gone through the onboarding flow.
+      await this.initializeTelemetry(installation);
+    }
+
     try {
       // Initialize app
-      this.comfyDesktopApp ??= new ComfyDesktopApp(installation, appWindow, telemetry);
+      this.comfyDesktopApp ??= new ComfyDesktopApp(this.installation, appWindow, telemetry);
       const { comfyDesktopApp } = this;
+
+      // Short circuit if server is already running - return the existing server's URL
+      if (comfyDesktopApp.serverRunning && comfyDesktopApp.comfyServer) {
+        log.info('ComfyUI server is already running, returning existing URL');
+        const host =
+          comfyDesktopApp.comfyServer.serverArgs.listen === '0.0.0.0'
+            ? 'localhost'
+            : comfyDesktopApp.comfyServer.serverArgs.listen;
+        const url = overrides.DEV_FRONTEND_URL ?? `http://${host}:${comfyDesktopApp.comfyServer.serverArgs.port}`;
+        appWindow.sendServerStartProgress(ProgressStatus.READY);
+        appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
+        appState.emitLoaded();
+        return { url };
+      }
 
       // Construct core launch args
       const serverArgs = await comfyDesktopApp.buildServerArgs(overrides);
 
-      // Short circuit if using external server or server is already running
-      if (overrides.useExternalServer || comfyDesktopApp.serverRunning) {
-        await loadFrontend(serverArgs);
-        return;
+      // Build the URL for ComfyUI
+      const host = serverArgs.listen === '0.0.0.0' ? 'localhost' : serverArgs.listen;
+      const url = overrides.DEV_FRONTEND_URL ?? `http://${host}:${serverArgs.port}`;
+
+      // Short circuit if using external server
+      if (overrides.useExternalServer) {
+        // Don't load frontend in the launcher window, just set state
+        appWindow.sendServerStartProgress(ProgressStatus.READY);
+        appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
+        appState.emitLoaded();
+        return { url };
       }
 
       // Start server
       try {
         await startComfyServer(comfyDesktopApp, serverArgs);
-        await loadFrontend(serverArgs);
+        // Don't load frontend in the launcher window, just set state
+        appWindow.sendServerStartProgress(ProgressStatus.READY);
+        appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
+        appState.emitLoaded();
+        return { url };
       } catch (error) {
         // If there is a module import error, offer to try and recreate the venv.
         const lastError = comfyDesktopApp.comfyServer?.parseLastError();
@@ -132,15 +183,17 @@ export class DesktopApp implements HasTelemetry {
             // User chose to reinstall - remove venv and retry
             log.info('User chose to reinstall venv after import verification failure');
 
-            const { virtualEnvironment } = installation;
+            const { virtualEnvironment } = this.installation;
             const removed = await virtualEnvironment.removeVenvDirectory();
             if (!removed) throw new Error('Failed to remove .venv directory');
 
             try {
               await virtualEnvironment.create(createProcessCallbacks(appWindow, { logStderrAsInfo: true }));
               await startComfyServer(comfyDesktopApp, serverArgs);
-              await loadFrontend(serverArgs);
-              return;
+              appWindow.sendServerStartProgress(ProgressStatus.READY);
+              appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
+              appState.emitLoaded();
+              return { url };
             } catch (error) {
               showStartupErrorPage(error);
             }
@@ -189,19 +242,8 @@ export class DesktopApp implements HasTelemetry {
      */
     async function startComfyServer(comfyDesktopApp: ComfyDesktopApp, serverArgs: ServerArgs): Promise<void> {
       appState.setInstallStage(createInstallStageInfo(InstallStage.STARTING_SERVER));
-      await comfyDesktopApp.startComfyServer(serverArgs);
-    }
-
-    /**
-     * Loads the frontend and sets the app state to ready.
-     * @param serverArgs The server args to use to load the frontend.
-     */
-    async function loadFrontend(serverArgs: ServerArgs): Promise<void> {
-      appWindow.sendServerStartProgress(ProgressStatus.READY);
-      await appWindow.loadComfyUI(serverArgs);
-
-      appState.setInstallStage(createInstallStageInfo(InstallStage.READY, { progress: 100 }));
-      appState.emitLoaded();
+      // Skip page load when launching from launcher - keep the launcher window visible
+      await comfyDesktopApp.startComfyServer(serverArgs, true);
     }
 
     /**
@@ -227,6 +269,13 @@ export class DesktopApp implements HasTelemetry {
       registerAppHandlers();
       registerGpuHandlers();
       registerInstallStateHandlers();
+
+      // Register launcher-specific handlers
+      registerLauncherHandlers(
+        () => this.appWindow['window'],
+        () => this.installation?.basePath,
+        async () => await this.start()
+      );
 
       ipcMain.handle(IPC_CHANNELS.START_TROUBLESHOOTING, async () => await this.showTroubleshootingPage());
     } catch (error) {

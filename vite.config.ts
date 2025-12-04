@@ -17,7 +17,13 @@ export default defineConfig((env) => {
         fileName: (_format, name) => `${name}.cjs`,
         formats: ['cjs'],
       },
-      rollupOptions: { external },
+      rollupOptions: {
+        external,
+        input: {
+          main: './src/main.ts',
+          launcher: './launcher.html',
+        },
+      },
       sourcemap: true,
       minify: false,
     },
