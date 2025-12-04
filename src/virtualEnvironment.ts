@@ -364,11 +364,6 @@ export class VirtualEnvironment implements HasTelemetry, PythonExecutor {
   public async installRequirements(callbacks?: ProcessCallbacks): Promise<void> {
     useAppState().setInstallStage(createInstallStageInfo(InstallStage.INSTALLING_REQUIREMENTS, { progress: 25 }));
 
-    // pytorch nightly is required for MPS
-    if (process.platform === 'darwin') {
-      return this.manualInstall(callbacks);
-    }
-
     const installCmd = getPipInstallArgs({
       requirementsFile: this.requirementsCompiledPath,
       indexStrategy: 'unsafe-best-match',
@@ -756,9 +751,18 @@ export class VirtualEnvironment implements HasTelemetry, PythonExecutor {
       return 'package-upgrade';
     }
 
-    const result = coreOk && managerOk ? 'OK' : 'error';
-    log.debug('hasRequirements result:', result);
-    return result;
+    if (!coreOk || !managerOk) {
+      log.info('Requirements are out of date. Treating as package upgrade.', {
+        coreOk,
+        managerOk,
+        upgradeCore,
+        upgradeManager,
+      });
+      return 'package-upgrade';
+    }
+
+    log.debug('hasRequirements result:', 'OK');
+    return 'OK';
   }
 
   /**
