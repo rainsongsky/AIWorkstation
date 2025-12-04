@@ -115,7 +115,11 @@ export class ComfyDesktopApp implements HasTelemetry {
     this.appWindow.sendServerStartProgress(ProgressStatus.STARTING_SERVER);
     this.comfyServer ??= new ComfyServer(this.basePath, serverArgs, virtualEnvironment, this.appWindow, this.telemetry);
     await this.comfyServer.start();
-    this.initializeTerminal(virtualEnvironment);
+    try {
+      this.initializeTerminal(virtualEnvironment);
+    } catch (error) {
+      log.error('Failed to initialize terminal, continuing without terminal', error);
+    }
   }
 
   async stopComfyServer() {
